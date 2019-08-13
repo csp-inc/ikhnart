@@ -1,0 +1,51 @@
+---
+# Common Collection Variables -------------------------------------------------
+#
+
+
+# Required Variables -------------------------------------------------
+#
+collectionmode: 'csv'
+properties: ['PlotKey']
+location: ['Longitude', 'Latitude']
+eeimgsid: 'IDAHO_EPSCOR/TERRACLIMATE'
+pixelsize: 4000
+bucketname: 'ikhnart'
+
+
+# Optional Variables -------------------------------------------------
+#
+allbands: 1
+years_back: 100
+years_forward: 100
+request_id: 'terraclimate'
+DOWNLOAD: 1
+cpus: 7
+# custom_function: 1
+centered_time: 2010
+# nearest_only: 1
+# index_start: 35830
+# not compatible with tiletif collections
+
+
+
+
+# See wiki for functionalities of each mode -------------------------------------------------
+#
+collectionmodes:
+    'csv':
+        csvname: 'ikhnart_points_v1.csv'
+        image_size: [1, 1]
+        numbatches: 300 
+        num_fakes: 0
+        featurebatchsize: 1 
+        climate_only: 0
+        DEM_only: 0
+    'squaretifs':
+        polygon: None
+        polyrad: 600
+        polycsv: '/home/brandon/cooperswamp.csv'
+    'tiletifs':
+        polyrad: None
+        polycsv: None
+        polygon: [-124.40641246395518,40.45418970590966, -120.01188121395518,40.55443206551827,-120.03385387020518,41.92571053950977, -124.34049449520518,42.04004330275142]
