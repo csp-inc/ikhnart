@@ -1,4 +1,0 @@
-FROM tonychangcsp/keras:v1.1
-
-RUN pip install geopandas 
-RUN pip install descartes
