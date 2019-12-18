@@ -9,13 +9,17 @@ ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
 ENV C_INCLUDE_PATH=/usr/include/gdal
 
 RUN apt-get update \
-    && wget \
+    && apt-get install -y wget \
        git \
+       geos++-dev \
+       libproj-dev \
     && apt-get autoremove \
     && rm -rf /var/lib/apt /var/cache/apt 
 
-RUN pip install keras \
+RUN pip install --upgrade pip \
+    keras \
     scikit-image \
+    scikit-learn \
     bokeh \
     pandas \
     numpy \ 
@@ -27,8 +31,14 @@ RUN pip install keras \
     descartes \
     folium \
     fiona \
-    rtree \
+    cython \
     && rm -rf /.cache/pip
+
+#RUN pip install geoplot
+
+RUN pip install git+https://github.com/SciTools/cartopy 
+RUN pip install geoplot
+#RUN git clone https://github.com/SciTools/cartopy && python cartopy/setup.py install \
 
 RUN mkdir -p $(jupyter --data-dir)/nbextensions 
 RUN cd $(jupyter --data-dir)/nbextensions && \
