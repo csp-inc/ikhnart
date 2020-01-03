@@ -12,9 +12,11 @@ library(lubridate)
 # ---- settings ---------------------------------------------------------------
 
 seed <- 123
+total_areas = 1
 
 n_prot_areas_targeted <- ifelse(  # the number of protected areas to draw
-  length(args) == 0, 75, as.integer(args[1]))  
+  length(args) == 0, total_areas, as.integer(args[1]))  
+
 n_locs_targeted <- ifelse(  # the number of locations to sample per protected area
   length(args) %in% c(0, 1), 100, as.integer(args[2]))   
 
