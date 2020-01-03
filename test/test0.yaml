@@ -1,0 +1,12 @@
+collection:
+    sample
+bucket:
+    dacqre-test0
+run_mode:
+    full
+my_vars:
+    - 'MODIS'
+end_date:
+    '1989-01-01'
+default_wide:
+    False

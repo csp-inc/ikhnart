@@ -1,0 +1,190 @@
+LANDSAT_NDVI_EVI:
+  eeimgid:
+  - LANDSAT/LT04/C01/T1_SR
+  - LANDSAT/LT05/C01/T1_SR
+  - LANDSAT/LE07/C01/T1_SR
+  - LANDSAT/LC08/C01/T1_SR
+  instrument: LANDSAT
+  selector_list:
+  - EVI
+  - NDVI
+  - radsat_qa
+  - pixel_qa
+  - path
+  - row
+  - B1
+  - B2
+  - B3
+  - B4
+  - B5
+  - sensor
+  sensors:
+  - 4
+  - 5
+  - 7
+  - 8
+  model:
+  - ''
+  scenario:
+  - ''
+MET:
+  eeimgid:
+  - IDAHO_EPSCOR/GRIDMET
+  instrument: GRIDMET
+  selector_list:
+  - tmmn
+  - tmmx
+  - pr
+  - vpd
+  sensors:
+  - ''
+  model:
+  - ''
+  scenario:
+  - ''
+TERRACLIMATE:
+  eeimgid:
+  - IDAHO_EPSCOR/TERRACLIMATE
+  instrument: TERRACLIMATE
+  selector_list:
+  - aet
+  - def
+  - pdsi
+  - pet
+  - pr
+  - ro
+  - soil
+  - srad
+  - swe
+  - tmmn
+  - tmmx
+  - vap
+  - vpd
+  - vs
+  sensors:
+  - ''
+  model:
+  - ''
+  scenario:
+  - ''
+DAYMET:
+  eeimgid:
+  - NASA/ORNL/DAYMET_V3
+  instrument: DAYMET
+  selector_list:
+  - dayl
+  - prcp
+  - srad
+  - swe
+  - tmax
+  - tmin
+  - vp
+  sensors:
+  - ''
+  model:
+  - ''
+  scenario:
+  - ''
+MODIS:
+  eeimgid:
+  - MODIS/006/MOD13Q1
+  instrument: MODIS
+  selector_list:
+  - NDVI
+  - EVI
+  - SummaryQA
+  - DayOfYear
+  sensors:
+  - ''
+  model:
+  - ''
+  scenario:
+  - ''
+LANDSAT_NBR:
+  eeimgid:
+  - LANDSAT/LT4_L1T_ANNUAL_NBRT
+  - LANDSAT/LT5_L1T_ANNUAL_NBRT
+  - LANDSAT/LE7_L1T_ANNUAL_NBRT
+  - LANDSAT/LC8_L1T_ANNUAL_NBRT
+  instrument: NBR
+  selector_list:
+  - NBRT
+  sensors:
+  - 4
+  - 5
+  - 7
+  - 8
+  model:
+  - ''
+  scenario:
+  - ''
+MTBS:
+  eeimgid:
+  - users/mgray/MTBS
+  instrument: MTBS
+  selector_list:
+  - severity
+  - year
+  sensors:
+  - ''
+  model:
+  - ''
+  scenario:
+  - ''
+MCD12Q2:
+  eeimgid:
+  - MODIS/006/MCD12Q2
+  instrument: MCD12Q2 
+  selector_list:
+  - NumCycles
+  - Greenup_1
+  - MidGreenup_1
+  - Peak_1
+  - Maturity_1
+  - MidGreendown_1
+  - Senescence_1
+  - Dormancy_1
+  - QA_Overall_1
+  sensors:
+  - ''
+  model:
+  - ''
+  scenario:
+  - ''
+MCD12Q1:
+  eeimgid:
+  - MODIS/006/MCD12Q1
+  instrument: MCD12Q1 
+  selector_list:
+  - LC_Type1
+  - LC_Type2
+  - LC_Type3
+  - LC_Type4
+  - LC_Type5
+  - LC_Prop1_Assessment
+  - LC_Prop2_Assessment
+  - QC
+  - LW
+  sensors:
+  - ''
+  model:
+  sensors:
+  - ''
+  model:
+  - ''
+  scenario:
+  - ''
+#GDDP:
+#  eeimgid:
+#  - NASA/NEX-GDDP
+#  instrument: GDDP
+#  selector_list:
+#  - tasmin
+#  - tasmax
+#  - pr
+#  sensors:
+#  - ''
+#  model:
+#  - 'CESM-BGC' 
+#  scenario:
+#  - 'rcp85' 
