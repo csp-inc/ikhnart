@@ -1,0 +1,12 @@
+collection:
+    sample
+bucket:
+    dacqre-test1
+run_mode:
+    submit_only
+my_vars:
+    - 'LANDSAT_NBR'
+end_date:
+    '2015-01-01'
+default_wide:
+    False

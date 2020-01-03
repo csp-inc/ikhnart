@@ -1,0 +1,110 @@
+.only_test_tags: &only_tags
+    only:
+        - /^.*test$/
+
+.testing: &tests
+    <<: *only_tags
+    image:
+        name: "registry.gitlab.com/apis-staging/dacqre"
+    tags: [docker]
+    variables:
+        private_key2: '${private_key}'
+    cache:
+        key: ${CI_BUILD_REF_NAME}
+        paths:
+            - test/results
+    artifacts:
+        name: "$CI_JOB_ID"
+        expire_in:
+            2 hour
+        paths:
+            - test/results
+    allow_failure: true
+    script:
+        - cp test/${CI_JOB_NAME}.yaml run_parameters.yaml
+        - python -u run.py
+        - python test/${CI_JOB_NAME}.py
+    before_script:
+        - cat authentication/service_sample.json | sed 's|google_project_id|'"${gcs_project_id}"'|' | sed 's|google_private_key_id|'"${private_key_id}"'|' | sed 's|google_client_id|'"${client_id}"'|' | sed 's|google_client_email|'"${client_email}"'|' | sed 's|google_client_x509_cert|'"${client_x509_cert}"'|' | sed 's|google_private_key|'"${private_key2}"'|' > /root/service-ee.json
+        - cat authentication/boto_service_sample | sed 's|my_project_id|'"${gcs_project_id}"'|' > /root/.boto
+        - mkdir -p /root/.config/earthengine
+        - cat authentication/credentials_sample_file | sed 's|my_ee_token|'"$(echo ${ee_token} | sed -e 's|[/\&]|\\&|g')"'|' > /root/.config/earthengine/credentials
+
+stages:
+    - build
+    - test0_stage
+    - test1a_stage
+    - test1b_stage
+    - test2_stage
+    - test3a_stage
+    - test3b_stage
+    - test_clean
+    - deploy
+
+
+pages:
+    stage: deploy
+    script:
+        - mkdir .public
+        - cp output/sample_report.html .public/index.html
+        - mv .public public
+    artifacts:
+        paths:
+            - public
+    except:
+        - master
+
+build:
+    <<: *only_tags
+    image: alpine:3.7
+    stage: build
+    script: 
+        - echo "Building test results log for ${CI_BUILD_REF_NAME}"
+        - echo ${CI_BUILD_REF_NAME} > test/results
+    artifacts:
+        paths:
+            - test/results
+
+test0:
+    <<: *tests
+    stage: test0_stage
+
+test1a:
+    <<: *tests
+    stage: test1a_stage
+
+test1b:
+    <<: *tests
+    stage: test1b_stage
+
+test2:
+    <<: *tests
+    stage: test2_stage
+
+test3a:
+    <<: *tests
+    stage: test3a_stage
+
+test3b:
+    <<: *tests
+    stage: test3b_stage
+
+clean_test_buckets:
+    <<: *tests
+    dependencies:
+        - test3b
+    stage: test_clean
+    script:
+        - cat test/results | xargs echo
+        - TOTAL=$(cat test/results | sed -n -e "/${CI_BUILD_REF_NAME}/,\$p" | wc -l)
+        - PASSED=$(cat test/results | sed -n -e "/${CI_BUILD_REF_NAME}/,\$p" | grep -oh "PASSED" | wc -l)
+        - COMPLETE=$(awk -v p="$PASSED" -v t="$TOTAL" "BEGIN {printf \"%.0f\", (100*p/(t-1))}")
+        - if [ $COMPLETE -ge 99 ]; then COLOR="brightgreen"; elif [ $COMPLETE -ge 90 ] ; then COLOR="green"; elif [ $COMPLETE -ge 80 ] ; then COLOR="yellowgreen"; elif [ $COMPLETE -ge 70 ] ; then COLOR="yellow"; elif [ $COMPLETE -ge 60 ] ; then COLOR="orange"; else COLOR="red"; fi
+        - if (( $(gsutil ls gs://dacqre-test1 | wc -l) > 0));then gsutil -m rm gs://dacqre-test1/**;fi
+        - if (( $(gsutil ls gs://dacqre-test2 | wc -l) > 0));then gsutil -m rm gs://dacqre-test2/**;fi
+        - if (( $(gsutil ls gs://dacqre-test3 | wc -l) > 0));then gsutil -m rm gs://dacqre-test3/**;fi
+        - VERSION=$(echo ${CI_BUILD_REF_NAME} | cut -f1 -d-)
+        - wget "https://img.shields.io/badge/version-$VERSION-orange.svg" -O version.svg
+        - wget "https://img.shields.io/badge/testing-$COMPLETE%25-$COLOR.svg" -O testing.svg
+        - gsutil cp version.svg gs://dacqre-badges/version.svg
+        - gsutil cp testing.svg gs://dacqre-badges/testing.svg

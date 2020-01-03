@@ -1,0 +1,56 @@
+CHILI:
+  eeimgid:
+  - CSP/ERGo/1_0/US/CHILI
+  implemented: false
+  instrument: CHILI
+  last_date: ''
+  sensors:
+  - ''
+ELEVATION:
+  eeimgid:
+  - USGS/NED
+  implemented: false
+  instrument: NED
+  last_date: ''
+  sensors:
+  - ''
+GLOBAL_ELEVATION:
+  eeimgid:
+  - USGS/SRTMGL1_003
+  implemented: false
+  instrument: SRTM
+  last_date: ''
+  sensors:
+  - ''
+AW3D30:
+  eeimgid:
+  - JAXA/ALOS/AW3D30_V1_1
+  implemented: false
+  instrument: ALOS
+  last_date: ''
+  sensors:
+  - ''
+GMTED2010:
+  eeimgid:
+  - USGS/GMTED2010
+  implemented: false
+  instrument: GMTED
+  last_date: ''
+  sensors:
+  - ''
+LANDCOVER:
+  eeimgid:
+  - USGS/NLCD/NLCD2016
+  implemented: false
+  instrument: NLCD
+  last_date: ''
+  sensors:
+  - ''
+EPA_ECOREGIONS:
+  eeimgid:
+  - EPA/Ecoregions/2013/L4
+  implemented: false
+  instrument: EPA
+  last_date: ''
+  sensors:
+  - ''
