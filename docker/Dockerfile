@@ -25,6 +25,10 @@ RUN pip install --upgrade pip \
     numpy \ 
     matplotlib \
     rasterio \
+    dask \
+    xarray \
+    intake \
+    pyviz \
     mapboxcli \ 
     kulc \
     geopandas \
