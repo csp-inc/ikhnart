@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.0.0-gpu-py3-jupyter
+FROM tensorflow/tensorflow:2.0.0-py3-jupyter
 
 LABEL org.label-schema.license="CSP-1.0" \
 	org.label-schema.vcs-url="https://gitlab.com/tonychang" \
@@ -23,6 +23,8 @@ RUN pip install --upgrade pip \
     bokeh \
     pandas \
     numpy \ 
+    geopy \
+    earthengine-api \
     matplotlib \
     rasterio \
     dask \
@@ -40,8 +42,8 @@ RUN pip install --upgrade pip \
 
 #RUN pip install geoplot
 
-RUN pip install git+https://github.com/SciTools/cartopy 
-RUN pip install geoplot
+#RUN pip install git+https://github.com/SciTools/cartopy 
+#RUN pip install geoplot
 #RUN git clone https://github.com/SciTools/cartopy && python cartopy/setup.py install \
 
 RUN mkdir -p $(jupyter --data-dir)/nbextensions 

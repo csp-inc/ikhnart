@@ -1,5 +1,11 @@
 data
 out
+<<<<<<< HEAD
 src/__pycache__
 *.swp
 .ipynb_checkpoints
+=======
+authentication
+*.swp
+*.pyc
+>>>>>>> 7f83fc99fdc9bf9811e427c47230ecf52aadb882
