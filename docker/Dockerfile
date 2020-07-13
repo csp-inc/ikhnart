@@ -30,6 +30,10 @@ RUN pip install --upgrade pip \
     dask \
     xarray \
     intake \
+    dask_image \
+    gcsfs \
+    gcloud \
+    distributed \
     pyviz \
     mapboxcli \ 
     kulc \

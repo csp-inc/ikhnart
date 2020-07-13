@@ -199,7 +199,7 @@ def create_date_range(datelist,monthwindow=2):
 def get_landsat_data(bounds, datelist, years_back=2,\
         max_cloud_thr=None, \
         bands=['B1','B2','B3','B4','B5','B7','cloud'],\
-        month_aggregate=True, verbose=False): 
+        month_aggregate=True, verbose=False, refl='TOA'): 
     '''
     Collects all landsat images from the calendar year previous of the <datelist>,
     and aggregates them into monthly means
@@ -222,21 +222,40 @@ def get_landsat_data(bounds, datelist, years_back=2,\
     # rename the band list to match with the Landsat 4/5/7 bands
     l57b = ee.List(['B1','B2','B3','B4','B5','B7','BQA','cloud'])
     bands_to_select = ee.List(bands)
-    l8 = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA').map(\
+
+
+    l8 = ee.ImageCollection(f'LANDSAT/LC08/C01/T1_{refl}').map(\
             ee.Algorithms.Landsat.simpleCloudScore).select(\
             l8b, l57b).filterMetadata(\
-            'CLOUD_COVER', 'less_than',max_cloud_thr) #Landsat 8
-    l7 = ee.ImageCollection('LANDSAT/LE07/C01/T1_TOA').map(\
+            'CLOUD_COVER', 'less_than',max_cloud_thr).filter(\
+            ee.Filter.calendarRange(previous_year,target_year,'year')).filterBounds(bounds) #Landsat 8
+
+    l5 = ee.ImageCollection(f'LANDSAT/LT05/C01/T1_{refl}').map(\
             ee.Algorithms.Landsat.simpleCloudScore).select(\
             l57b).filterMetadata(\
-            'CLOUD_COVER', 'less_than',max_cloud_thr) #landsat 7
-    l5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_TOA').map(\
+            'CLOUD_COVER', 'less_than',max_cloud_thr).filter(\
+            ee.Filter.calendarRange(previous_year,target_year,'year')).filterBounds(bounds) #landsat 5
+
+    def l7fill(image):
+        filled1a = image.focal_mean(2, 'square', 'pixels', 1)
+        return filled1a.blend(image).copyProperties(image).copyProperties(image, ['system:time_start'])
+
+    l7 = ee.ImageCollection(f'LANDSAT/LE07/C01/T1_{refl}').map(\
             ee.Algorithms.Landsat.simpleCloudScore).select(\
             l57b).filterMetadata(\
-            'CLOUD_COVER', 'less_than',max_cloud_thr) #landsat 5
+            'CLOUD_COVER', 'less_than',max_cloud_thr).filter(\
+            ee.Filter.calendarRange(2012,2013,'year')).filterBounds(bounds)
+            #ee.Filter.calendarRange(previous_year,target_year,'year')).filterBounds(bounds)
+    # only take landsat 7 when the dates are the non-overlapping landsat 5 to landsat 8
+    #landsat 7
+    #add extra line to bound it first
+    l7 = l7.map(l7fill)
+
     landsat = ee.ImageCollection(l5.merge(l7).merge(l8)).filter(\
-            ee.Filter.calendarRange(\
-            previous_year,target_year,'year')).filterBounds(bounds)
+            ee.Filter.calendarRange(previous_year,target_year,'year'))
+    #.filter(\
+    #        ee.Filter.calendarRange(\
+    #        previous_year,target_year,'year')).filterBounds(bounds)
     if verbose:
         collection_size = landsat.size().getInfo()
         print(f'Found {collection_size} LANDSAT images from 01-01-{previous_year} to 12-31-{target_year}.')
@@ -252,11 +271,13 @@ def get_landsat_data(bounds, datelist, years_back=2,\
             month_landsat = landsat.filter(ee.Filter.calendarRange(month,month,'month'))
             month_bands = ee.List([f'{b}_{month}' for b in bands_to_select.getInfo()])
             month_landsat = month_landsat.select(bands_to_select,month_bands).map(trimEdges)
-            monthly_mean = month_landsat.mean().float()
-            landsat_monthly.append(monthly_mean)
+            monthly_median = month_landsat.median().float()
+            #use a quality mosaic instead of the monthly median?
+            #monthly_mosaic = month_landsat.qualityMosaic('system:time_start')
+            landsat_monthly.append(monthly_median)
             #data QA check, below should return 84, 
             #otherwise, not all annual LANDSAT data is available for date range
-            out = ee.Image.cat(landsat_monthly)
+        out = ee.Image.cat(landsat_monthly)
         if verbose:
             bandcount = len(out.bandNames().getInfo())
             print(f'\nCollected LANDSAT data and aggregated to single image with {bandcount} bands represent mean month for bands: {bands}.\n')
