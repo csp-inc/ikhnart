@@ -1,5 +1,7 @@
 data
 out
+dask-worker-space
+figs
 <<<<<<< HEAD
 src/__pycache__
 *.swp
