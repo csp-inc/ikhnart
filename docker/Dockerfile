@@ -20,6 +20,7 @@ RUN pip install --upgrade pip \
     keras \
     scikit-image \
     scikit-learn \
+    seaborn \
     bokeh \
     pandas \
     numpy \ 
